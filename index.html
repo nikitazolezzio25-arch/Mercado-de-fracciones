@@ -1,0 +1,722 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>El Gran Mercado de las Fracciones</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Nunito:wght@400;600;700;800;900&display=swap');
+:root{--ink:#30334b;--cream:#fff9e9;--pink:#ff7895;--orange:#ff9b45;--yellow:#ffd75e;--green:#63bd83;--blue:#69b9e8;--purple:#9a82df;--shadow:0 9px 0 rgba(65,57,88,.12),0 18px 35px rgba(65,57,88,.12)}
+*{box-sizing:border-box}
+body{margin:0;background:#fff3d9;color:var(--ink);font-family:'Nunito',sans-serif;min-height:100vh;background-image:radial-gradient(#ffc9a3 1.5px,transparent 1.5px),radial-gradient(#a8dcb3 1.5px,transparent 1.5px);background-size:34px 34px,51px 51px;background-position:0 0,18px 20px}
+button,input,textarea{font:inherit}
+button{cursor:pointer;border:0}
+.app{max-width:1240px;margin:auto;padding:0 18px 45px}
+.topbar{height:76px;display:flex;justify-content:space-between;align-items:center;gap:12px}
+.logo{display:flex;align-items:center;gap:10px;font:800 22px 'Baloo 2';color:#51476f}
+.logo-mark{width:45px;height:45px;border-radius:15px;background:#fff;display:grid;place-items:center;box-shadow:0 4px 0 #e7c8a4;font-size:26px}
+.top-actions{display:flex;gap:8px}
+.pill{background:white;border:2px solid #f0dfc6;border-radius:30px;padding:9px 14px;font-weight:900;color:#5b5570}
+.pill:hover{transform:translateY(-2px)}
+.screen{display:none}
+.screen.active{display:block;animation:pop .35s ease}
+@keyframes pop{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.hero{display:grid;grid-template-columns:1fr 1fr;gap:20px;align-items:center;padding:20px 0}
+.hero-copy{padding:22px 10px}
+.ribbon{display:inline-block;background:var(--yellow);padding:8px 17px;border-radius:30px;font-weight:1000;font-size:13px;transform:rotate(-2deg);box-shadow:0 4px 0 #e8b94b}
+.hero h1{font:800 clamp(43px,6vw,74px)/.98 'Baloo 2';letter-spacing:-2px;margin:18px 0 12px;color:#4d4770}
+.hero h1 span{color:#f06c7e}
+.hero p{font-size:18px;line-height:1.5;max-width:520px;font-weight:800;color:#68617d}
+.btn{border-radius:18px;padding:13px 22px;font-weight:1000;font-size:16px;box-shadow:0 5px 0 rgba(60,55,75,.18);transition:.15s}
+.btn:hover{transform:translateY(-3px);filter:brightness(1.03)}
+.btn:active{transform:translateY(2px);box-shadow:0 2px 0 rgba(60,55,75,.18)}
+.btn-main{background:var(--pink);color:#fff}
+.btn-green{background:var(--green);color:#173d2b}
+.btn-yellow{background:var(--yellow);color:#5c4822}
+.btn-blue{background:var(--blue);color:#183d54}
+.hero-buttons{display:flex;gap:12px;flex-wrap:wrap;margin-top:22px}
+.market-scene{height:410px;border:7px solid white;border-radius:35px;background:linear-gradient(#9bd8f1 0 57%,#b9e8a6 57%);position:relative;overflow:hidden;box-shadow:var(--shadow)}
+.sun{position:absolute;right:8%;top:7%;width:75px;height:75px;border-radius:50%;background:#ffe16d;box-shadow:0 0 0 12px #fff3a455}
+.cloud{position:absolute;background:#fff;border-radius:40px;width:100px;height:28px;top:18%;left:8%}
+.cloud:before,.cloud:after{content:'';position:absolute;background:#fff;border-radius:50%;bottom:0}
+.cloud:before{width:40px;height:40px;left:15px}
+.cloud:after{width:50px;height:50px;left:42px}
+.shopfront{position:absolute;left:13%;right:13%;bottom:11%;height:62%;background:#fff5d9;border:8px solid #fff;border-radius:14px 14px 4px 4px;box-shadow:0 8px 0 #d99b65}
+.awning{position:absolute;top:-17px;left:-8px;right:-8px;height:66px;display:flex;border:5px solid white;border-bottom:0;border-radius:12px 12px 0 0;overflow:hidden}
+.awning i{flex:1;background:#ff7895}
+.awning i:nth-child(even){background:#fff1d2}
+.sign{position:absolute;top:57px;left:50%;transform:translateX(-50%) rotate(-2deg);background:#ffdc66;border:4px solid white;border-radius:12px;padding:5px 18px;font:800 20px 'Baloo 2';white-space:nowrap}
+.counter{position:absolute;bottom:0;left:-3%;right:-3%;height:32%;background:#c77e4c;border:7px solid #f3c58c;border-radius:12px 12px 0 0}
+.crate{position:absolute;bottom:30%;height:24%;width:23%;background:#d99b55;border:5px solid #f5cf8f;border-radius:9px}
+.crate.left{left:7%}.crate.right{right:7%}
+.fruit{position:absolute;bottom:53%;left:11%;font-size:38px;filter:drop-shadow(0 3px 0 #0001)}
+.fruit2{position:absolute;right:12%;bottom:53%;font-size:39px}
+.jar{position:absolute;bottom:31%;left:43%;width:17%;height:33%;border:5px solid #fff;background:linear-gradient(transparent 45%,#e9c56b 46%);border-radius:13px 13px 7px 7px}
+.jar:before{content:'';position:absolute;left:18%;right:18%;height:10px;top:-12px;background:#9c6545;border-radius:5px}
+.floating{position:absolute;background:white;border:3px solid #ffe19a;border-radius:18px;padding:9px 13px;font-weight:1000;box-shadow:0 5px 0 #dfc99f}
+.float1{left:3%;top:8%;transform:rotate(-7deg)}
+.float2{right:3%;bottom:5%;transform:rotate(5deg)}
+.scene-deco{position:absolute;font-size:34px;animation:bob 3s ease-in-out infinite}
+.d1{top:35%;left:4%}.d2{right:5%;top:35%;animation-delay:.7s}.d3{left:48%;top:4%;animation-delay:1.1s}
+@keyframes bob{50%{transform:translateY(-9px) rotate(7deg)}}
+.welcome-wheel-box{background:#fffdf4;border:4px solid white;border-radius:28px;padding:17px;margin:10px auto 0;max-width:560px;box-shadow:var(--shadow)}
+.wheel-title{text-align:center;font:800 22px 'Baloo 2';margin:0 0 7px;color:#61577c}
+.wheel-wrap{width:min(340px,75vw);aspect-ratio:1;position:relative;margin:10px auto}
+.wheel{height:100%;width:100%;border-radius:50%;border:9px solid white;box-shadow:0 7px 0 #d9c9aa,0 0 0 3px #f0dfc6;position:relative;overflow:hidden;background:conic-gradient(from -60deg,var(--yellow) 0 120deg,var(--blue) 120deg 240deg,var(--pink) 240deg 360deg);transition:transform 4.2s cubic-bezier(.12,.78,.12,1)}
+.wheel:after{content:'';position:absolute;inset:0;border-radius:50%;background:repeating-conic-gradient(from -60deg,transparent 0 119deg,#ffffffd9 119deg 121deg)}
+.wheel-label{position:absolute;left:50%;top:50%;z-index:1;width:108px;text-align:center;font-weight:1000;font-size:13px;line-height:1.15;color:#4d4568;text-shadow:0 1px #fff9}
+.wheel-label small{display:block;font-size:10px;letter-spacing:.8px;text-transform:uppercase}
+.wheel-label.a{transform:translate(-50%,-50%) rotate(0deg) translateY(-92px)}
+.wheel-label.b{transform:translate(-50%,-50%) rotate(120deg) translateY(-92px) rotate(-120deg)}
+.wheel-label.c{transform:translate(-50%,-50%) rotate(240deg) translateY(-92px) rotate(-240deg)}
+.hub{position:absolute;z-index:3;width:67px;height:67px;border-radius:50%;background:white;border:7px solid #f6e9cf;left:50%;top:50%;transform:translate(-50%,-50%);display:grid;place-items:center;font:800 18px 'Baloo 2';color:#5c5475;box-shadow:0 3px 8px #0002}
+.pointer{position:absolute;z-index:5;top:-5px;left:50%;transform:translateX(-50%);border-left:17px solid transparent;border-right:17px solid transparent;border-top:33px solid #51476f;filter:drop-shadow(0 3px 1px #fff)}
+.wheel-action{text-align:center}.wheel-action .btn{min-width:200px}
+.mini-stations{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:22px 0}
+.station-mini{border:3px solid white;border-radius:20px;padding:14px;background:#fff9e9;text-align:center;box-shadow:0 5px 0 #e7d8bd}
+.station-mini .emoji{font-size:32px}
+.station-mini b{display:block;font:800 16px 'Baloo 2';margin-top:4px}
+.station-mini span{font-size:12px;font-weight:800;color:#7a7184}
+.modal-bg{position:fixed;inset:0;background:#34304dcc;z-index:20;display:none;align-items:center;justify-content:center;padding:16px}
+.modal-bg.show{display:flex}
+.modal{background:#fff9e9;border:7px solid white;border-radius:28px;max-width:520px;width:100%;padding:27px;box-shadow:0 15px 0 #39314d35;position:relative}
+.modal h2{font:800 32px 'Baloo 2';margin:0 0 3px;color:#e96e8a}
+.modal p{font-weight:800;line-height:1.5;color:#6c647e}
+.fields{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:18px 0}
+.field label{display:block;font-weight:1000;font-size:12px;margin-bottom:6px}
+.field input,.answer-field textarea{width:100%;border:2px solid #eadfc9;border-radius:14px;padding:12px;background:white;outline:none;color:var(--ink)}
+.field input:focus,.answer-field textarea:focus{border-color:#78c89a;box-shadow:0 0 0 3px #78c89a25}
+.game-head{display:flex;justify-content:space-between;align-items:center;gap:12px;margin:14px 0}
+.game-head h2{font:800 31px 'Baloo 2';margin:0;color:#544b72}
+.team-chip{background:#fff;border:2px solid #efdfc5;padding:9px 14px;border-radius:25px;font-weight:1000;font-size:13px}
+.progress{background:#fff;border:3px solid white;border-radius:18px;padding:12px 16px;display:flex;align-items:center;gap:14px;box-shadow:0 4px 0 #eadcc2;margin-bottom:18px}
+.progress strong{font-size:13px;white-space:nowrap}
+.progress-track{height:13px;background:#f0e9db;border-radius:30px;flex:1;overflow:hidden}
+.progress-fill{height:100%;width:0;background:linear-gradient(90deg,#74ca92,#ffcf5a,#ff8ca4);border-radius:30px;transition:width .35s}
+.progress-count{font:800 20px 'Baloo 2';color:#6a5b85}
+.game-grid{display:grid;grid-template-columns:1fr .85fr;gap:18px}
+.panel{background:#fffdf5;border:4px solid white;border-radius:27px;padding:20px;box-shadow:var(--shadow)}
+.panel-kicker{font-size:12px;font-weight:1000;letter-spacing:1px;text-transform:uppercase;color:#8a7e98}
+.spin-help{text-align:center;font-size:13px;font-weight:800;color:#7b718b;margin:2px 0 14px}
+.spin-center{text-align:center}
+.station-card{border-radius:20px;padding:17px;color:#443d60;margin-bottom:12px;position:relative;overflow:hidden;border:3px solid white;min-height:100px}
+.station-card:after{content:attr(data-emoji);position:absolute;right:12px;bottom:-13px;font-size:65px;opacity:.3;transform:rotate(-12deg)}
+.station-card small{font-size:10px;font-weight:1000;letter-spacing:1px}
+.station-card h3{font:800 22px 'Baloo 2';margin:3px 0}
+.station-card p{font-size:12px;font-weight:800;margin:0;max-width:78%}
+.s1{background:#ffe19a}.s2{background:#ffc2d0}.s3{background:#b9e3f7}
+.stats{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:12px 0}
+.stat{background:#f7f0e2;border-radius:15px;padding:12px;text-align:center}
+.stat b{font:800 26px 'Baloo 2';display:block}
+.stat span{font-size:10px;font-weight:1000;color:#80768e}
+.history-open{width:100%}
+.challenge-shell{max-width:900px;margin:10px auto}
+.challenge-nav{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+.challenge-card{background:#fffdf5;border:5px solid white;border-radius:28px;overflow:hidden;box-shadow:var(--shadow)}
+.challenge-banner{padding:19px 24px;background:linear-gradient(100deg,#ffe39b,#ffc3d1);display:flex;justify-content:space-between;align-items:center;gap:10px}
+.challenge-banner small{font-size:11px;font-weight:1000;letter-spacing:1px;text-transform:uppercase}
+.challenge-banner h2{font:800 clamp(25px,4vw,35px) 'Baloo 2';margin:2px 0;color:#51476f}
+.number-bubble{width:55px;height:55px;flex:none;border-radius:50%;background:#fff;display:grid;place-items:center;font:800 24px 'Baloo 2';box-shadow:0 4px 0 #e8c7a5}
+.challenge-body{padding:23px}
+.prompt-label{font-size:12px;font-weight:1000;color:#8c7899;text-transform:uppercase;letter-spacing:1px}
+.prompt{font-size:20px;line-height:1.45;font-weight:1000;margin:7px 0 18px}
+.hint,.whole{border-radius:16px;padding:13px 16px;margin:10px 0}
+.hint{background:#fff1c9;border-left:6px solid #f5c84d}
+.whole{background:#dff3e5;border-left:6px solid #69bd83}
+.hint b,.whole b{display:block;font-size:11px;letter-spacing:.8px;text-transform:uppercase;margin-bottom:4px}
+.hint p,.whole p{font-size:14px;font-weight:800;line-height:1.45;margin:0}
+.answer-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:19px}
+.answer-field label{display:block;font-size:12px;font-weight:1000;margin-bottom:7px}
+.answer-field textarea{resize:vertical;min-height:85px;font-weight:700}
+.challenge-actions{display:flex;gap:12px;margin-top:17px;flex-wrap:wrap}
+.challenge-actions .btn{flex:1}
+.message{display:none;padding:12px 15px;border-radius:14px;margin-top:13px;font-weight:1000}
+.message.show{display:block}
+.message.error{background:#ffe2e0;color:#a34242}
+.message.success{background:#ddf3e2;color:#276c43}
+.completed-head{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.completed-head h2{font:800 34px 'Baloo 2';margin:0;color:#51476f}
+.cards{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:18px 0}
+.receipt{background:#fffdf5;border:4px solid white;border-radius:19px;padding:17px;box-shadow:0 5px 0 #e8d9bd;position:relative}
+.receipt:before{content:'✓';position:absolute;right:14px;top:12px;width:29px;height:29px;border-radius:50%;background:#dff3e5;color:#3c925c;display:grid;place-items:center;font-weight:1000}
+.receipt h3{font:800 20px 'Baloo 2';margin:0 35px 5px 0}
+.receipt .meta{font-size:11px;font-weight:900;color:#887c96;margin-bottom:10px}
+.receipt .q{font-weight:900;font-size:13px;line-height:1.4;margin:9px 0}
+.receipt .ans{background:#f3f0ff;padding:9px 11px;border-radius:11px;font-size:13px;margin-top:7px;overflow-wrap:anywhere}
+.receipt .ans b{display:block;font-size:10px;text-transform:uppercase;letter-spacing:.7px;margin-bottom:3px}
+.empty{text-align:center;padding:35px;background:#fffdf5;border:3px dashed #e5d5b8;border-radius:20px;font-weight:900;color:#837990}
+.toast{position:fixed;bottom:18px;left:50%;transform:translate(-50%,20px);background:#51476f;color:white;padding:12px 18px;border-radius:30px;font-weight:900;opacity:0;transition:.25s;z-index:50;pointer-events:none;text-align:center;max-width:90%}
+.toast.show{opacity:1;transform:translate(-50%,0)}
+
+/* NUEVO: ventana de devolución automática. Mantiene la estética original. */
+.feedback-modal{background:#34304dcc;position:fixed;inset:0;z-index:60;display:none;align-items:center;justify-content:center;padding:16px}
+.feedback-modal.show{display:flex}
+.feedback-card{background:#fff9e9;border:7px solid white;border-radius:28px;max-width:480px;width:100%;padding:28px 24px;text-align:center;box-shadow:0 15px 0 #39314d35;animation:pop .25s ease}
+.feedback-icon{font-size:58px;line-height:1.2;margin-bottom:8px}
+.feedback-card h2{font:800 32px 'Baloo 2';color:#e96e8a;margin:0 0 8px}
+.feedback-card p{font-weight:900;line-height:1.5;color:#6c647e;margin:0 0 19px}
+.feedback-buttons{display:grid;gap:10px}
+.feedback-buttons .btn{width:100%}
+.feedback-card.correct h2{color:#399765}
+.feedback-card.incorrect h2{color:#e96e8a}
+
+@media(max-width:800px){.hero{grid-template-columns:1fr}.market-scene{height:340px}.game-grid{grid-template-columns:1fr}.game-grid .wheel-wrap{width:min(320px,70vw)}}
+@media(max-width:560px){.app{padding:0 12px 30px}.topbar{height:66px}.logo{font-size:16px}.logo-mark{width:38px;height:38px}.top-actions .pill{padding:8px 10px;font-size:12px}.hero-copy{padding:14px 4px}.hero h1{font-size:47px}.hero p{font-size:15px}.market-scene{height:285px}.mini-stations{gap:7px}.station-mini{padding:9px 4px}.station-mini .emoji{font-size:26px}.station-mini b{font-size:13px}.station-mini span{font-size:10px}.fields,.answer-grid,.cards{grid-template-columns:1fr}.game-head{align-items:flex-start;flex-direction:column}.game-head h2{font-size:27px}.progress{gap:8px;padding:10px}.progress strong{font-size:11px;white-space:normal}.progress-count{font-size:17px}.panel{padding:14px}.challenge-body{padding:17px}.challenge-banner{padding:16px}.prompt{font-size:18px}.challenge-actions{flex-direction:column}.challenge-actions .btn{width:100%}.modal{padding:21px}.modal h2{font-size:28px}.feedback-card{padding:23px 18px}.feedback-card h2{font-size:28px}}
+@media print{body{background:white}.topbar,.no-print,.toast{display:none!important}.app{max-width:none}.cards{display:block}.receipt{break-inside:avoid;margin-bottom:12px;box-shadow:none}}
+</style>
+</head>
+<body>
+<div class="app">
+<header class="topbar">
+ <div class="logo"><span class="logo-mark">🧺</span> EL GRAN MERCADO</div>
+ <div class="top-actions">
+  <button class="pill" id="showCompletedTop">🏆 Retos completados <span id="topCount">0</span></button>
+  <button class="pill" id="soundToggle">🔊 Sonido</button>
+ </div>
+</header>
+
+<section id="welcome" class="screen active">
+ <div class="hero">
+  <div class="hero-copy">
+   <span class="ribbon">🎈 ¡Una aventura matemática!</span>
+   <h1>¡Bienvenido al <span>Mercado de las Fracciones!</span></h1>
+   <p>¡Hoy somos comerciantes! Girá la ruleta, resolvé los pedidos y trabajá en equipo para superar los desafíos del mercado.</p>
+   <div class="hero-buttons"><button class="btn btn-main" id="startBtn">Comenzar a jugar ▶</button></div>
+  </div>
+  <div class="market-scene">
+   <div class="sun"></div><div class="cloud"></div>
+   <span class="scene-deco d1">🍎</span><span class="scene-deco d2">🥚</span><span class="scene-deco d3">🦋</span>
+   <div class="floating float1">¡OFERTAS!</div>
+   <div class="shopfront">
+    <div class="awning"><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+    <div class="sign">EL MERCADITO</div>
+    <div class="fruit">🍊🍐🍎</div><div class="fruit2">🧀🥚</div><div class="jar"></div>
+    <div class="crate left"></div><div class="crate right"></div><div class="counter"></div>
+   </div>
+   <div class="floating float2">¡Qué rico! 🍰</div>
+  </div>
+ </div>
+
+ <div class="welcome-wheel-box">
+  <h2 class="wheel-title">🎡 ¡La ruleta del mercado!</h2>
+  <div class="wheel-wrap">
+   <div class="pointer"></div>
+   <div class="wheel" id="welcomeWheel">
+    <div class="wheel-label a"><small>Estación 1</small>Granos</div>
+    <div class="wheel-label b"><small>Estación 2</small>Tortas y quesos</div>
+    <div class="wheel-label c"><small>Estación 3</small>Huevos</div>
+   </div>
+   <div class="hub">¡YA!</div>
+  </div>
+  <div class="wheel-action"><button class="btn btn-yellow" id="welcomeStart">Comenzar a jugar</button></div>
+ </div>
+
+ <div class="mini-stations">
+  <div class="station-mini"><div class="emoji">🌾</div><b>Pesaje de granos</b><span>Medir y comparar</span></div>
+  <div class="station-mini"><div class="emoji">🍰</div><b>Tortas y quesos</b><span>Repartir en partes iguales</span></div>
+  <div class="station-mini"><div class="emoji">🥚</div><b>Puesto de huevos</b><span>Fracciones de una docena</span></div>
+ </div>
+</section>
+
+<section id="game" class="screen">
+ <div class="game-head">
+  <div><h2>¡A jugar, equipo! 🎉</h2><div id="teamLine" style="font-weight:800;color:#7c718e"></div></div>
+  <div class="team-chip" id="teamChip">👫 Equipo</div>
+ </div>
+ <div class="progress">
+  <strong>🏅 Recorrido completado</strong>
+  <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+  <div class="progress-count" id="progressCount">0/15</div>
+ </div>
+ <div class="game-grid">
+  <div class="panel">
+   <div class="panel-kicker">🎡 ¡Girá y descubrí tu puesto!</div>
+   <div class="wheel-wrap">
+    <div class="pointer"></div>
+    <div class="wheel" id="gameWheel">
+     <div class="wheel-label a"><small>Estación 1</small>Granos</div>
+     <div class="wheel-label b"><small>Estación 2</small>Tortas y quesos</div>
+     <div class="wheel-label c"><small>Estación 3</small>Huevos</div>
+    </div>
+    <div class="hub">¡YA!</div>
+   </div>
+   <p class="spin-help" id="spinHelp">La ruleta elegirá uno de los tres puestos.</p>
+   <div class="spin-center"><button class="btn btn-main" id="spinBtn">Girar ruleta 🎡</button></div>
+  </div>
+  <aside class="panel">
+   <div class="panel-kicker">🛍️ Los puestos del mercado</div>
+   <div class="station-card s1" data-emoji="🌾"><small>ESTACIÓN 01</small><h3>Pesaje de granos</h3><p>Medir cantidades y comparar pesos.</p></div>
+   <div class="station-card s2" data-emoji="🍰"><small>ESTACIÓN 02</small><h3>Tortas y quesos</h3><p>Reconocer enteros, mitades y cuartos.</p></div>
+   <div class="station-card s3" data-emoji="🥚"><small>ESTACIÓN 03</small><h3>Puesto de huevos</h3><p>Repartir una docena en partes iguales.</p></div>
+   <div class="stats">
+    <div class="stat"><b id="doneStat">0</b><span>FICHAS GUARDADAS</span></div>
+    <div class="stat"><b>15</b><span>DESAFÍOS EN TOTAL</span></div>
+   </div>
+   <button class="btn btn-blue history-open" id="showCompleted">🏆 ¡Retos completados!</button>
+  </aside>
+ </div>
+</section>
+
+<section id="challenge" class="screen">
+ <div class="challenge-shell">
+  <div class="challenge-nav">
+   <button class="pill" id="backToWheel">← Volver a la ruleta</button>
+   <span class="pill" id="stationPill">ESTACIÓN</span>
+  </div>
+  <div class="challenge-card">
+   <div class="challenge-banner">
+    <div><small>🧾 FICHA DE PEDIDO</small><h2 id="challengeTitle"></h2></div>
+    <div class="number-bubble" id="challengeNumber">01</div>
+   </div>
+   <div class="challenge-body">
+    <div class="prompt-label">📣 Consigna</div>
+    <p class="prompt" id="challengePrompt"></p>
+    <div class="whole" style="background:#e8e3ff;border-left-color:#9a82df"><b>🧺 Materiales del puesto</b><p id="challengeMaterials"></p></div>
+    <div class="hint"><b>💡 Pista</b><p id="challengeHint"></p></div>
+    <div class="whole"><b>🟢 El entero de referencia</b><p id="challengeWhole"></p></div>
+    <div class="answer-grid">
+     <div class="answer-field"><label for="answer">✏️ RESPUESTA</label><textarea id="answer" placeholder="Escriban la respuesta del equipo..."></textarea></div>
+     <div class="answer-field"><label for="reason">🧠 ¿CÓMO LO RESOLVIERON?</label><textarea id="reason" placeholder="Expliquen qué materiales utilizaron y cómo llegaron a ese resultado..."></textarea></div>
+    </div>
+    <div class="message" id="challengeMessage"></div>
+    <div class="challenge-actions">
+     <button class="btn btn-green" id="finishBtn">FINALIZADO ✓</button>
+     <button class="btn btn-yellow" id="spinAgainBtn">GIRAR DE NUEVO 🎡</button>
+    </div>
+   </div>
+  </div>
+ </div>
+</section>
+
+<section id="completed" class="screen">
+ <div class="completed-head">
+  <div><h2>🏆 ¡Retos completados!</h2><p id="completedTeam" style="font-weight:800;color:#7c718e;margin:4px 0"></p></div>
+  <div class="hero-buttons no-print" style="margin:0">
+   <button class="btn btn-blue" id="exportBtn">Exportar TXT</button>
+   <button class="btn btn-yellow" id="printBtn">Imprimir fichas</button>
+  </div>
+ </div>
+ <div style="font-weight:1000;margin-top:8px">Fichas guardadas: <span id="completedCount">0</span></div>
+ <div class="cards" id="completedCards"></div>
+ <button class="btn btn-main no-print" id="returnGame">Volver al juego</button>
+</section>
+</div>
+
+<div class="modal-bg" id="registerModal">
+ <div class="modal">
+  <h2>¡2 son mejor que 1! 💛</h2>
+  <p>Los desafíos del mercado se resuelven en equipo. Entre los dos deberán pensar, utilizar los materiales, encontrar las respuestas y explicar cómo llegaron a ellas.</p>
+  <div class="fields">
+   <div class="field"><label for="player1">Nombre del participante 1</label><input id="player1" maxlength="35" placeholder="Nombre"></div>
+   <div class="field"><label for="player2">Nombre del participante 2</label><input id="player2" maxlength="35" placeholder="Nombre"></div>
+  </div>
+  <button class="btn btn-green" id="registerBtn" style="width:100%">¡Vamos a jugar! 🎉</button>
+ </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<!-- NUEVO: ventana de devolución de la corrección -->
+<div class="feedback-modal" id="feedbackModal" role="dialog" aria-modal="true">
+ <div class="feedback-card" id="feedbackCard">
+  <div class="feedback-icon" id="feedbackIcon">🌟</div>
+  <h2 id="feedbackTitle">¡Excelente!</h2>
+  <p id="feedbackText"></p>
+  <div class="feedback-buttons" id="feedbackButtons"></div>
+ </div>
+</div>
+
+<script>
+const DATA=[
+{station:'Puesto de pesaje de granos',emoji:'🌾',materials:'Balanza casera construida con botellas y agua (principio de Arquímedes), vasos medidores graduados en fracciones de kilo, arroz, polenta y lentejas.',purpose:'Relacionar las fracciones de kilo con los gramos, medir cantidades y comparar pesos.',items:[
+{title:'El pedido de arroz',prompt:'Un cliente necesita 500 gramos de arroz. ¿Qué fracción de kilo tenés que medir?',hint:'Observá las marcas del vaso medidor y buscá la que te permita preparar el pedido. Después podés comprobarlo con la balanza casera.',whole:'En este puesto, el entero es 1 kilogramo (1000 gramos).'},
+{title:'El pedido de polenta',prompt:'Una clienta pide 250 gramos de polenta. ¿Qué fracción de kilo representa esa cantidad?',hint:'Utilizá el vaso medidor para observar cuánto ocupa esa cantidad y comparala con las marcas que indican las partes de un kilo.',whole:'El entero es 1 kilogramo de polenta.'},
+{title:'¿Quién lleva más?',prompt:'Un cliente compra 1/2 kg de lentejas y otro 1/4 kg de arroz. ¿Cuál de los dos lleva más cantidad?',hint:'Prepará los dos pedidos utilizando los vasos medidores. Luego utilizá la balanza casera para comparar sus pesos.',whole:'En ambos pedidos, el entero de referencia es 1 kilogramo.'},
+{title:'Dos pedidos, una misma cantidad',prompt:'Un cliente pide 1/4 kg de polenta y otro 250 gramos de arroz. ¿Los dos compraron la misma cantidad?',hint:'Utilizá el vaso medidor y la balanza casera construida con botellas y agua para representar y comparar ambos pedidos.',whole:'El entero es 1 kilogramo, que contiene 1000 gramos.'},
+{title:'El pedido de lentejas',prompt:'Un cliente necesita 750 gramos de lentejas. ¿Qué fracción de kilo tenés que medir?',hint:'Utilizá las marcas de 1/2 kg y 1/4 kg del vaso medidor para preparar el pedido. Después comprobá el peso con la balanza casera.',whole:'El entero es 1 kilogramo de lentejas.'}
+]},
+{station:'Puesto de tortas y quesos',emoji:'🍰',materials:'Tortas y quesos de telgopor, divisibles en partes iguales.',purpose:'Reconocer el entero, identificar mitades y cuartos y resolver situaciones de reparto equitativo.',items:[
+{title:'Una torta para compartir',prompt:'Dos personas quieren compartir una torta entera en partes iguales. ¿Qué fracción de la torta recibe cada una?',hint:'Utilizá la torta de telgopor para representar el reparto. Las dos personas deben recibir porciones del mismo tamaño.',whole:'Una torta completa representa un entero.'},
+{title:'El queso de los amigos',prompt:'Cuatro amigos quieren compartir un queso entero en partes iguales. ¿Qué fracción del queso recibe cada uno?',hint:'Representá a los cuatro amigos y buscá una manera de repartir el queso sin que nadie reciba más que otro.',whole:'El queso completo representa un entero.'},
+{title:'Tres tortas para cuatro clientes',prompt:'Hay tres tortas enteras para repartir entre cuatro clientes. ¿Qué fracción de torta recibe cada uno?',hint:'Podés utilizar las tres tortas y distribuir las porciones de manera que todos reciban la misma cantidad.',whole:'Cada torta completa representa un entero. En total hay tres enteros.'},
+{title:'Dos tortas para tres personas',prompt:'Dos personas deben compartir dos tortas enteras en partes iguales. ¿Qué fracción de torta recibe cada una?',hint:'Utilizá las tortas de telgopor para representar el reparto y comprobá que ambas personas reciban la misma cantidad.',whole:'Cada torta completa representa un entero.'},
+{title:'Un pedido de tres cuartos',prompt:'Un cliente necesita 3/4 de un queso. ¿En cuántas partes iguales tenés que dividirlo y cuántas partes debés entregarle?',hint:'Utilizá el queso de telgopor y observá cómo podés representar las cuatro partes de un mismo tamaño.',whole:'Un queso completo representa un entero.'}
+]},
+{station:'Puesto de huevos',emoji:'🥚',materials:'Una huevera con 12 huevos.',purpose:'Comprender las fracciones de una colección de objetos y reconocer la docena como unidad de referencia.',items:[
+{title:'El pedido de media docena',prompt:'Un cliente pide media docena de huevos. ¿Cuántos huevos tenés que entregarle?',hint:'Utilizá los huevos para formar dos grupos que tengan la misma cantidad.',whole:'Una docena completa equivale a 12 huevos.'},
+{title:'El pedido de un cuarto de docena',prompt:'Una clienta pide 1/4 de docena de huevos. ¿Cuántos huevos tenés que entregarle?',hint:'Organizá los huevos en grupos iguales para poder representar las cuatro partes de la docena.',whole:'Una docena completa equivale a 12 huevos.'},
+{title:'¿Quién lleva más huevos?',prompt:'Un cliente compra 1/2 docena y otro 1/4 de docena. ¿Cuál de los dos lleva más huevos?',hint:'Representá los dos pedidos con los huevos de la huevera y observá cuántos recibe cada cliente.',whole:'Una docena completa equivale a 12 huevos.'},
+{title:'Dos formas de pedir huevos',prompt:'Un cliente pide 6 huevos y otro pide 1/2 docena. ¿Los dos compraron la misma cantidad?',hint:'Utilizá la huevera para representar los dos pedidos y comparar las cantidades.',whole:'Una docena completa equivale a 12 huevos.'},
+{title:'Una docena para cuatro familias',prompt:'Llegó una docena de huevos y hay cuatro familias que quieren recibir la misma cantidad. ¿Cuántos huevos recibe cada familia?',hint:'Utilizá todos los huevos y organizalos en cuatro grupos iguales, sin dejar ninguno afuera.',whole:'Una docena completa equivale a 12 huevos.'}
+]}
+];
+
+/* NUEVO: respuestas de referencia para los 15 desafíos.
+   Se compara la respuesta escrita por el equipo, no la explicación.
+   En caso de error, la solución nunca se muestra. */
+const ANSWERS=[
+ [
+  {type:'fraction',accepted:['1/2','0.5','medio','media','un medio','medio kilo','media unidad']},
+  {type:'fraction',accepted:['1/4','0.25','un cuarto','cuarto','un cuarto de kilo']},
+  {type:'choice',accepted:['lentejas','las lentejas','el de lentejas','el cliente de las lentejas','quien lleva medio kilo','el que lleva medio kilo']},
+  {type:'yes',accepted:['si','son iguales','la misma cantidad','misma cantidad','iguales','ambos compraron lo mismo']},
+  {type:'fraction',accepted:['3/4','0.75','tres cuartos','tres cuarto','tres cuartos de kilo']}
+ ],
+ [
+  {type:'fraction',accepted:['1/2','0.5','medio','media','un medio','media torta','medio pastel']},
+  {type:'fraction',accepted:['1/4','0.25','un cuarto','cuarto','un cuarto de queso']},
+  {type:'fraction',accepted:['3/4','0.75','tres cuartos','tres cuarto','tres cuartos de torta']},
+  {type:'whole',accepted:['1','1/1','un entero','una entera','un entero de torta','una torta','una torta entera','1 torta','1 torta entera','un kilo']},
+  {type:'threeFourths',accepted:['3/4','tres cuartos','3 partes de 4','3 de 4','tres de cuatro','cuatro partes iguales y tres','dividir en cuatro y entregar tres']}
+ ],
+ [
+  {type:'number',accepted:['6','seis','6 huevos','seis huevos']},
+  {type:'number',accepted:['3','tres','3 huevos','tres huevos']},
+  {type:'choice',accepted:['el primero','primero','el de media docena','media docena','el que compra media docena','el cliente que compra media docena','6 huevos','seis huevos','seis','6']},
+  {type:'yes',accepted:['si','son iguales','la misma cantidad','misma cantidad','iguales','ambos compraron lo mismo']},
+  {type:'number',accepted:['3','tres','3 huevos','tres huevos']}
+ ]
+];
+
+const KEY='granMercadoFracciones_v3';
+let team={a:'',b:''},records=[],used=[[],[],[]],current=null,rotation=0,isSpinning=false,soundOn=true,musicOn=false,musicTimer=null,audio=null;
+const $=id=>document.getElementById(id);
+
+function screen(id){
+ document.querySelectorAll('.screen').forEach(x=>x.classList.remove('active'));
+ $(id).classList.add('active');
+ window.scrollTo({top:0,behavior:'smooth'});
+}
+function persist(){localStorage.setItem(KEY,JSON.stringify({team,records,used}));}
+function load(){
+ try{
+  const d=JSON.parse(localStorage.getItem(KEY)||'null');
+  if(d){
+   team=d.team||team;
+   records=Array.isArray(d.records)?d.records:[];
+   used=Array.isArray(d.used)&&d.used.length===3?d.used:[[],[],[]];
+  }
+ }catch(e){records=[];used=[[],[],[]];}
+}
+function updateTeam(){
+ const names=team.a+' y '+team.b;
+ $('teamLine').textContent='Equipo: '+names+' · una ficha compartida';
+ $('teamChip').textContent='👫 '+names;
+ $('completedTeam').textContent='Participantes: '+names;
+}
+function updateProgress(){
+ const n=records.length;
+ $('progressFill').style.width=(n/15*100)+'%';
+ $('progressCount').textContent=n+'/15';
+ $('doneStat').textContent=n;
+ $('topCount').textContent=n;
+}
+function toast(msg){
+ $('toast').textContent=msg;
+ $('toast').classList.add('show');
+ setTimeout(()=>$('toast').classList.remove('show'),2600);
+}
+function audioContext(){
+ if(!audio)audio=new(window.AudioContext||window.webkitAudioContext)();
+ if(audio.state==='suspended')audio.resume();
+ return audio;
+}
+function tone(freq=520,duration=.13,type='sine',volume=.045){
+ if(!soundOn)return;
+ try{
+  const c=audioContext(),o=c.createOscillator(),g=c.createGain();
+  o.type=type;o.frequency.value=freq;
+  g.gain.setValueAtTime(volume,c.currentTime);
+  g.gain.exponentialRampToValueAtTime(.001,c.currentTime+duration);
+  o.connect(g);g.connect(c.destination);o.start();o.stop(c.currentTime+duration);
+ }catch(e){}
+}
+function spinSound(){
+ if(!soundOn)return;
+ let n=0;
+ const id=setInterval(()=>{
+  tone(300+(n%4)*80,.06,'triangle',.025);
+  if(++n>16)clearInterval(id);
+ },160);
+}
+function musicStart(){
+ if(!musicOn||!soundOn||musicTimer)return;
+ try{
+  const c=audioContext(),notes=[392,494,587,494,440,523,659,523];
+  let step=0;
+  musicTimer=setInterval(()=>{
+   if(!musicOn||!soundOn)return;
+   const o=c.createOscillator(),g=c.createGain();
+   o.type='sine';o.frequency.value=notes[step++%notes.length];
+   g.gain.setValueAtTime(.012,c.currentTime);
+   g.gain.exponentialRampToValueAtTime(.001,c.currentTime+.24);
+   o.connect(g);g.connect(c.destination);o.start();o.stop(c.currentTime+.25);
+  },330);
+ }catch(e){}
+}
+function musicStop(){
+ if(musicTimer){clearInterval(musicTimer);musicTimer=null;}
+}
+function updateSoundButton(){
+ $('soundToggle').textContent=soundOn?'🔊 Sonido':'🔇 Silenciado';
+}
+function register(){
+ const a=$('player1').value.trim(),b=$('player2').value.trim();
+ if(!a||!b){toast('Completá los dos nombres para continuar.');return;}
+ team={a,b};persist();updateTeam();
+ $('registerModal').classList.remove('show');
+ updateProgress();screen('game');musicStart();tone(660,.18);
+}
+function openRegistration(){
+ if(team.a&&team.b){updateTeam();screen('game');return;}
+ $('registerModal').classList.add('show');
+}
+function chooseChallenge(station){
+ if(used[station].length>=5)used[station]=[];
+ const options=DATA[station].items.map((_,i)=>i).filter(i=>!used[station].includes(i));
+ const idx=options[Math.floor(Math.random()*options.length)];
+ used[station].push(idx);persist();
+ return idx;
+}
+function spin(){
+ if(isSpinning)return;
+ if(records.length>=15){toast('¡Completaron los 15 desafíos! 🎉');return;}
+ isSpinning=true;$('spinBtn').disabled=true;$('spinBtn').textContent='Girando…';
+ spinSound();
+ const station=Math.floor(Math.random()*3),idx=chooseChallenge(station);
+ const center=[0,120,240][station],norm=((rotation%360)+360)%360;
+ const delta=((360-center-norm)%360)+360*5+Math.floor(Math.random()*150);
+ rotation+=delta;$('gameWheel').style.transform=`rotate(${rotation}deg)`;
+ setTimeout(()=>{
+  isSpinning=false;$('spinBtn').disabled=false;$('spinBtn').textContent='Girar ruleta 🎡';
+  current={station,index:idx};tone(760,.25,'sine',.06);showChallenge();
+ },4350);
+}
+function showChallenge(){
+ const d=DATA[current.station],c=d.items[current.index];
+ $('stationPill').textContent=d.emoji+' '+d.station;
+ $('challengeTitle').textContent=c.title;
+ $('challengeNumber').textContent=String(current.index+1).padStart(2,'0');
+ $('challengePrompt').textContent=c.prompt;
+ $('challengeMaterials').textContent=d.materials;
+ $('challengeHint').textContent=c.hint;
+ $('challengeWhole').textContent=c.whole;
+ $('answer').value='';$('reason').value='';
+ $('challengeMessage').className='message';
+ $('challengeMessage').textContent='';
+ screen('challenge');
+}
+
+/* NUEVO: normalización para aceptar distintas formas de escribir una respuesta. */
+function normalize(value){
+ return String(value||'')
+  .toLowerCase()
+  .normalize('NFD')
+  .replace(/[\u0300-\u036f]/g,'')
+  .replace(/½/g,'1/2')
+  .replace(/¼/g,'1/4')
+  .replace(/¾/g,'3/4')
+  .replace(/,/g,'.')
+  .replace(/[¿?¡!.,;:]/g,' ')
+  .replace(/\s+/g,' ')
+  .trim();
+}
+function checkAnswer(value,station,index){
+ const answer=normalize(value);
+ if(!answer)return false;
+ const rule=ANSWERS[station][index];
+
+ if(rule.accepted.some(x=>answer===normalize(x)))return true;
+
+ // Se admiten respuestas que incluyan la fracción correcta junto con una explicación.
+ if(rule.type==='fraction'){
+  return rule.accepted.some(x=>{
+   const normalized=normalize(x);
+   return normalized.includes('/') && new RegExp('(^|[^0-9])'+normalized.replace('/','\\/')+'([^0-9]|$)').test(answer);
+  });
+ }
+ if(rule.type==='number'){
+  return rule.accepted.some(x=>answer===normalize(x)) ||
+   rule.accepted.some(x=>new RegExp('(^|\\s)'+normalize(x)+'(\\s|$)').test(answer));
+ }
+ if(rule.type==='yes'){
+  return /(^|\s)(si|son iguales|iguales|la misma cantidad|misma cantidad)(\s|$)/.test(answer);
+ }
+ if(rule.type==='choice'){
+  if(station===0&&index===2){
+   return answer.includes('lentejas')||answer.includes('medio kilo')||answer.includes('1/2');
+  }
+  if(station===2&&index===2){
+   return answer.includes('media docena')||answer.includes('1/2 docena')||answer.includes('6 huevos')||answer.includes('el primero');
+  }
+ }
+ if(rule.type==='whole'){
+  return answer==='1'||answer.includes('una torta')||answer.includes('un entero')||answer.includes('una entera');
+ }
+ if(rule.type==='threeFourths'){
+  return answer.includes('3/4')||answer.includes('tres cuartos')||
+   (answer.includes('3')&&answer.includes('4')&&(answer.includes('parte')||answer.includes('divid')));
+ }
+ return false;
+}
+
+/* NUEVO: ventanas de devolución y botones para volver a intentar o regresar a la ruleta. */
+function showFeedback(correct){
+ const modal=$('feedbackModal');
+ const card=$('feedbackCard');
+ const buttons=$('feedbackButtons');
+ buttons.innerHTML='';
+ card.classList.toggle('correct',correct);
+ card.classList.toggle('incorrect',!correct);
+
+ if(correct){
+  $('feedbackIcon').textContent='🌟';
+  $('feedbackTitle').textContent='¡Excelente!';
+  $('feedbackText').textContent='¡La respuesta es correcta! Muy buen trabajo en equipo. La ficha quedó guardada.';
+  const continueBtn=document.createElement('button');
+  continueBtn.className='btn btn-green';
+  continueBtn.textContent='Volver a la ruleta 🎡';
+  continueBtn.onclick=()=>{
+   modal.classList.remove('show');
+   clearDraft();
+   screen('game');
+   $('spinHelp').textContent='¡Ficha guardada! Giren de nuevo para visitar otro puesto.';
+  };
+  buttons.appendChild(continueBtn);
+ }else{
+  $('feedbackIcon').textContent='💪';
+  $('feedbackTitle').textContent='¡A seguir intentando!';
+  $('feedbackText').textContent='Del fracaso se aprende, del éxito no mucho. ¡Inténtenlo de nuevo!';
+
+  const retryBtn=document.createElement('button');
+  retryBtn.className='btn btn-green';
+  retryBtn.textContent='Intentarlo de nuevo ✏️';
+  retryBtn.onclick=()=>{
+   modal.classList.remove('show');
+   $('answer').focus();
+  };
+
+  const wheelBtn=document.createElement('button');
+  wheelBtn.className='btn btn-yellow';
+  wheelBtn.textContent='Volver a la ruleta 🎡';
+  wheelBtn.onclick=()=>{
+   modal.classList.remove('show');
+   clearDraft();
+   screen('game');
+  };
+  buttons.append(retryBtn,wheelBtn);
+ }
+ modal.classList.add('show');
+}
+function clearDraft(){
+ current=null;
+ $('answer').value='';
+ $('reason').value='';
+ $('challengeMessage').className='message';
+ $('challengeMessage').textContent='';
+}
+
+/* MODIFICADO: ahora comprueba primero la respuesta.
+   Solo guarda la ficha si la respuesta es correcta. */
+function finish(){
+ const answer=$('answer').value.trim(),reason=$('reason').value.trim();
+ if(!answer||!reason){
+  const m=$('challengeMessage');
+  m.textContent='Para finalizar, completen la respuesta y la explicación.';
+  m.className='message show error';tone(220,.15);return;
+ }
+
+ const correct=checkAnswer(answer,current.station,current.index);
+ if(!correct){
+  tone(220,.2,'sine',.05);
+  showFeedback(false);
+  return;
+ }
+
+ const d=DATA[current.station],c=d.items[current.index];
+ const record={
+  id:Date.now()+'-'+Math.random().toString(16).slice(2),
+  date:new Date().toISOString(),
+  dateLabel:new Date().toLocaleString('es-AR'),
+  participants:[team.a,team.b],
+  station:d.station,stationIndex:current.station,
+  materials:d.materials,purpose:d.purpose,
+  challengeNumber:current.index+1,title:c.title,
+  consigna:c.prompt,pista:c.hint,entero:c.whole,
+  respuesta:answer,justificacion:reason
+ };
+ records.push(record);
+ persist();
+ updateProgress();
+ tone(760,.2,'sine',.06);
+ showFeedback(true);
+}
+function abandon(){
+ if(!confirm('Esta ficha todavía no está finalizada. ¿Querés descartarla y volver a la ruleta?'))return;
+ clearDraft();screen('game');
+}
+function renderCompleted(){
+ const wrap=$('completedCards');wrap.innerHTML='';
+ $('completedCount').textContent=records.length;
+ if(!records.length){
+  wrap.innerHTML='<div class="empty" style="grid-column:1/-1">Todavía no hay fichas completadas. ¡Giren la ruleta para comenzar!</div>';
+  return;
+ }
+ records.forEach((r,i)=>{
+  const card=document.createElement('article');card.className='receipt';
+  const h=document.createElement('h3');h.textContent=(i+1)+'. '+r.title;
+  const meta=document.createElement('div');meta.className='meta';meta.textContent=r.station+' · '+r.dateLabel;
+  const names=document.createElement('div');names.className='meta';names.textContent='Participantes: '+r.participants.join(' y ');
+  const q=document.createElement('p');q.className='q';q.textContent='Consigna: '+r.consigna;
+  const mat=document.createElement('p');mat.className='q';mat.textContent='Materiales: '+r.materials;
+  const hint=document.createElement('p');hint.className='q';hint.textContent='Pista: '+r.pista;
+  const whole=document.createElement('p');whole.className='q';whole.textContent='El entero: '+r.entero;
+  const ans=document.createElement('div');ans.className='ans';
+  const ab=document.createElement('b');ab.textContent='Respuesta del equipo';
+  const at=document.createElement('span');at.textContent=r.respuesta;ans.append(ab,at);
+  const just=document.createElement('div');just.className='ans';
+  const jb=document.createElement('b');jb.textContent='¿Cómo lo resolvieron?';
+  const jt=document.createElement('span');jt.textContent=r.justificacion;just.append(jb,jt);
+  card.append(h,meta,names,q,mat,hint,whole,ans,just);wrap.append(card);
+ });
+}
+function showCompleted(){renderCompleted();screen('completed');}
+function exportTxt(){
+ if(!records.length){toast('Todavía no hay fichas para exportar.');return;}
+ let out='EL GRAN MERCADO DE LAS FRACCIONES\n';
+ records.forEach((r,i)=>{
+  out+='\nFICHA '+(i+1)+'\nParticipantes: '+r.participants.join(' y ')+'\nEstación: '+r.station+'\nDesafío: '+r.title+'\nConsigna: '+r.consigna+'\nPista: '+r.pista+'\nEl entero: '+r.entero+'\nRespuesta: '+r.respuesta+'\nJustificación: '+r.justificacion+'\nFecha: '+r.dateLabel+'\n';
+ });
+ const blob=new Blob([out],{type:'text/plain;charset=utf-8'});
+ const url=URL.createObjectURL(blob),a=document.createElement('a');
+ a.href=url;a.download='retos-completados-mercado-fracciones.txt';a.click();
+ URL.revokeObjectURL(url);
+}
+$('startBtn').onclick=openRegistration;
+$('welcomeStart').onclick=openRegistration;
+$('registerBtn').onclick=register;
+$('spinBtn').onclick=spin;
+$('finishBtn').onclick=finish;
+$('spinAgainBtn').onclick=abandon;
+$('backToWheel').onclick=abandon;
+$('showCompleted').onclick=showCompleted;
+$('showCompletedTop').onclick=showCompleted;
+$('returnGame').onclick=()=>screen('game');
+$('exportBtn').onclick=exportTxt;
+$('printBtn').onclick=()=>window.print();
+$('soundToggle').onclick=()=>{
+ soundOn=!soundOn;
+ if(!soundOn){musicStop();}
+ else{musicStart();tone(650,.1);}
+ updateSoundButton();
+};
+musicOn=true;
+updateSoundButton();
+load();updateProgress();
+if(team.a&&team.b){
+ $('player1').value=team.a;$('player2').value=team.b;
+ updateTeam();screen('game');
+}else{screen('welcome');}
+</script>
+</body>
+</html>
